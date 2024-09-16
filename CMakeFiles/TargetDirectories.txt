@@ -1,0 +1,3 @@
+C:/projects/granny/CMakeFiles/GRANNY.dir
+C:/projects/granny/CMakeFiles/edit_cache.dir
+C:/projects/granny/CMakeFiles/rebuild_cache.dir
