@@ -16,6 +16,7 @@
 #include <buffer/vertex_array_object.h>
 #include <buffer/element_buffer.h>
 #include <gl_call.h>
+#include <texture/texture.h>
 
 int main(){
    if(!glfwInit()){
@@ -91,6 +92,12 @@ int main(){
    auto shaderBuilder = ShaderBuilder();
    shaderBuilder.SetVertexShaderFile("vs.vs");
    shaderBuilder.SetFragmentShaderFile("fs.fs");
+   auto text_tpl = render::opengl::texture::TextureFromFile("a.jpg");
+   if(text_tpl.IsError()){
+      printf("Error could not load texture!\n");
+      return -1;
+   }
+   text_tpl.val.Bind();
 
    auto shader_tpl = shaderBuilder.Build();
    if(shader_tpl.IsError()){

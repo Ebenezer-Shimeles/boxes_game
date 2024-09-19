@@ -7,6 +7,7 @@ add_executable(GRANNY  engine/libs/glad/src/glad.c
                        engine/render/opengl/buffer/vertex_buffer.cc
                        engine/render/opengl/buffer/element_buffer.cc
                        engine/render/opengl/buffer/vertex_array_object.cc
+                       engine/render/opengl/texture/texture.cc
                        main.cc
                )
 
