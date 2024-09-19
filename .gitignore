@@ -1,2 +1,7 @@
 engine/libs/
 .vs
+CmakeFiles/
+.vscode
+*.exe
+*.cmake
+*.sln

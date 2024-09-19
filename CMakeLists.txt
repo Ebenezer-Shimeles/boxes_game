@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 project(GRANNY)
 
-add_executable(GRANNY  engine/libs/glad/src/glad.c   engine/file/file.cc
+add_executable(GRANNY  engine/libs/glad/src/glad.c   engine/render/opengl/shader/shader_program.cc
   
  main.cc)
 

@@ -10,21 +10,8 @@
 #include <glm/ext/matrix_clip_space.hpp> // glm::perspective
 #include <glm/ext/scalar_constants.hpp> // glm::pi
 
-#ifndef GL_CALL
-#define GL_CALL(x) x;\
-{\
-    bool is_gl_error = false; \
-    while(GLenum y = glGetError()) { \
-        if (y == GL_NO_ERROR) break; \
-        is_gl_error = true; \
-        std::cout << "OpenGL Error: " << y << '\n'; \
-    } \
-    if (is_gl_error) {\
-        exit(1);\
-    }\
-}
-#endif
-
+#include <shader/shader_program.h>
+#include <gl_call.h>
 glm::mat4 camera(float Translate, glm::vec2 const& Rotate)
 {
 	glm::mat4 Projection = glm::perspective(glm::pi<float>() * 0.25f, 4.0f / 3.0f, 0.1f, 100.f);
@@ -136,6 +123,18 @@ int main(){
    
    GL_CALL(glVertexAttribPointer(0, 2, GL_FLOAT, GL_TRUE, 2 *sizeof(float),nullptr));
    
+
+   auto shaderBuilder = ShaderBuilder();
+   shaderBuilder.SetVertexShaderFile("vs.vs");
+   shaderBuilder.SetFragmentShaderFile("fs.fs");
+
+   auto shader_tpl = shaderBuilder.Build();
+   if(shader_tpl.IsError()){
+      fprintf(stderr, "Could not build shader! exiting\n");
+      return -1;
+   }
+   auto shader = std::move(shader_tpl.val);
+   shader.Bind();
   
    while(!glfwWindowShouldClose(window)){
        GL_CALL(glClearColor(0, 0, 0, 0));
