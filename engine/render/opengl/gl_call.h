@@ -1,16 +1,14 @@
-#ifndef GL_CALL
+#include <glad/glad.h>
 #include <cstdio>
-#include <cstdlib>
-#define GL_CALL(x) x;\
-{\
-    bool is_gl_error = false; \
-    while(GLenum y = glGetError()) { \
-        if (y == GL_NO_ERROR) break; \
-        is_gl_error = true; \    
-        fprintf(stderr, "OPENGL ERROR: %i", y); \
-    } \
-    if (is_gl_error) {\
-        exit(1);\
-    }\
+#define GL_CALL(exp) exp; gl_check_error(__LINE__);
+
+inline void gl_check_error(size_t line) {
+    bool flag = false;
+    GLint err;
+    while( (err = glGetError()) != GL_NO_ERROR){
+        printf( "Opengl error %i   on line %i\n", err, line);
+    }
+    if(flag){
+        exit(-1);
+    }
 }
-#endif

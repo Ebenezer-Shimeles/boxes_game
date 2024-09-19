@@ -51,10 +51,10 @@ int main(){
   
    //
    float vertices[] = {
-     1.0, -1.0,
-     -1.0, -1.0,
-     -1.0, 1.0,
-      1.0, 1.0
+     .5, -.5,    1.0, 0,
+     -.5, -.5,   0, 0,
+     -.5, .5,    0, 1.0,
+      .5, .5,    1.0, 1.0
    };
    // uint32_t VAO;
    // GL_CALL(glGenVertexArrays(1, &VAO));
@@ -67,7 +67,7 @@ int main(){
    // GL_CALL(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6, vertices, GL_STATIC_DRAW));
 
    uint32_t indices[] = {0, 1, 2, 0, 2, 3};
-   auto vbo = engine::render::opengl::VBOBuilder().SetBufferSize(8 * sizeof(float)).SetData(vertices).Build();
+   auto vbo = engine::render::opengl::VBOBuilder().SetBufferSize(sizeof(vertices)).SetData(vertices).Build();
  //  vbo.Bind();
 
    auto ebo = engine::render::opengl::EBOBuilder().SetBufferSize(6 * sizeof(uint32_t)).SetData(indices).Build();
@@ -80,19 +80,39 @@ int main(){
                                                    .size = 2,
                                                    .type = GL_FLOAT,
                                                    .normalized = GL_FALSE, 
-                                                   .stride = 2 * sizeof(float),
+                                                   .stride = 4 * sizeof(float),
                                                    .pointer = nullptr
-                                                   }).Build();
+                                                   })
+                                                   .AddAttribPointer({
+                                                   .location = 1,
+                                                   .size = 2,
+                                                   .type = GL_FLOAT,
+                                                   .normalized = GL_FALSE, 
+                                                   .stride = 4 * sizeof(float),
+                                                   .pointer = (void*)(sizeof(float)*2)
+
+                                                   })
+                                                   .Build();
                                                 
    vao.Bind();
+   
   // vao.Unbind();
   // GL_CALL(glVertexAttribPointer(0, 2, GL_FLOAT, GL_TRUE, 2 *sizeof(float),nullptr));
    
 
    auto shaderBuilder = ShaderBuilder();
-   shaderBuilder.SetVertexShaderFile("vs.vs");
-   shaderBuilder.SetFragmentShaderFile("fs.fs");
-   auto text_tpl = render::opengl::texture::TextureFromFile("a.jpg");
+   auto vsresult_tpl = shaderBuilder.SetVertexShaderFile("vs.vs");
+   if(vsresult_tpl.IsError()){
+      fprintf(stderr, "Error %s\n", vsresult_tpl.err.error_message);
+      return -1;
+   }
+   auto fsresult_tpl = shaderBuilder.SetFragmentShaderFile("fs.fs");
+   if(fsresult_tpl.IsError()){
+      fprintf(stderr, "Error %s\n", fsresult_tpl.err.error_message);
+      return -1;
+   }
+
+   auto text_tpl = render::opengl::texture::TextureFromFile("a.jpg", true);
    if(text_tpl.IsError()){
       printf("Error could not load texture!\n");
       return -1;
