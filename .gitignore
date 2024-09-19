@@ -5,3 +5,6 @@ CmakeFiles/
 *.exe
 *.cmake
 *.sln
+
+Makefile
+CMakeCache.txt

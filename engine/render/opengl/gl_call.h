@@ -1,5 +1,6 @@
 #ifndef GL_CALL
 #include <cstdio>
+#include <cstdlib>
 #define GL_CALL(x) x;\
 {\
     bool is_gl_error = false; \

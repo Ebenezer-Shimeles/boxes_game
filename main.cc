@@ -1,6 +1,7 @@
 #include <glad/glad.h>
 
 #include <iostream>
+#include <memory>
 #include <cstring>
 #include <GLFW/glfw3.h>
 #include <glm/vec3.hpp> // glm::vec3
@@ -11,17 +12,10 @@
 #include <glm/ext/scalar_constants.hpp> // glm::pi
 
 #include <shader/shader_program.h>
+#include <buffer/vertext_buffer.h>
+#include <buffer/vertex_array_object.h>
+#include <buffer/element_buffer.h>
 #include <gl_call.h>
-glm::mat4 camera(float Translate, glm::vec2 const& Rotate)
-{
-	glm::mat4 Projection = glm::perspective(glm::pi<float>() * 0.25f, 4.0f / 3.0f, 0.1f, 100.f);
-	glm::mat4 View = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -Translate));
-	View = glm::rotate(View, Rotate.y, glm::vec3(-1.0f, 0.0f, 0.0f));
-	View = glm::rotate(View, Rotate.x, glm::vec3(0.0f, 1.0f, 0.0f));
-	glm::mat4 Model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
-	return Projection * View * Model;
-}
-
 
 int main(){
    if(!glfwInit()){
@@ -53,75 +47,45 @@ int main(){
  
    
 
-   char*   vertextShaderSrc = "#version 330 core\n"\
-                               "layout(location=0) in vec2 pos;"
-                               "void main(){"\
-                               "   gl_Position = vec4(pos,0,1.0);"\
-                               "}";
-                               ;
-   uint32_t vertexshader = glCreateShader(GL_VERTEX_SHADER);
-   GL_CALL(glShaderSource(vertexshader, 1,&vertextShaderSrc, (GLint*)nullptr));
-   GL_CALL(glCompileShader(vertexshader));
-   int32_t compileStatus;
-   glGetShaderiv(vertexshader, GL_COMPILE_STATUS, &compileStatus);
-   if(!compileStatus){
-      char erro[255]{};
-      glGetShaderInfoLog(vertexshader, 255, &compileStatus, erro);
-      std::cout << "Couldn't compile vertex shader!: " << erro <<'\n';
-      return -1;
-   }
-   //
-
-   const char* fragmentShaderSource = "#version 330 core\n"\
-                                      "out vec4 FragColor;\n"\
-                                      "void main(){\n"\
-                                      "  FragColor = vec4(1.0, 1.0, 0.0, 0.6);"
-                                      "}"   
-   ;
-   GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-   glShaderSource(fragmentShader, 1, &fragmentShaderSource, (GLint*)nullptr);
-   glCompileShader(fragmentShader);
-   
-   int32_t frcompileStatus;
-   glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &frcompileStatus);
-   if(!frcompileStatus){
-      char erro[255]{};
-      glGetShaderInfoLog(fragmentShader, 255, &frcompileStatus, erro);
-      std::cout << "Couldn't compile fragment shader!: " << erro <<'\n';
-      return -1;
-   }
-   //
-   GLuint program = glCreateProgram();
-   glAttachShader(program, vertexshader);
-   glAttachShader(program, fragmentShader);
-   glLinkProgram(program);
-   GLint linkStatus;
-   glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
-   if(!linkStatus){
-    char infoLog[255]{};
-     glGetProgramInfoLog(program, 255, nullptr, infoLog);
-     std::cerr << "Unable to link program! " << infoLog << '\n';
-     return -1;
-
-   }
-   GL_CALL(glUseProgram(program));
+  
    //
    float vertices[] = {
      1.0, -1.0,
      -1.0, -1.0,
-     -1.0, 1.0
+     -1.0, 1.0,
+      1.0, 1.0
    };
-   uint32_t VAO;
-   GL_CALL(glGenVertexArrays(1, &VAO));
-   GL_CALL(glBindVertexArray(VAO)); 
+   // uint32_t VAO;
+   // GL_CALL(glGenVertexArrays(1, &VAO));
+   // GL_CALL(glBindVertexArray(VAO)); 
 
 
-   uint32_t VBO;
-   GL_CALL(glGenBuffers(1, &VBO));
-   GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, VBO));
-   GL_CALL(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6, vertices, GL_STATIC_DRAW));
-   
-   GL_CALL(glVertexAttribPointer(0, 2, GL_FLOAT, GL_TRUE, 2 *sizeof(float),nullptr));
+   // uint32_t VBO;
+   // GL_CALL(glGenBuffers(1, &VBO));
+   // GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, VBO));
+   // GL_CALL(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6, vertices, GL_STATIC_DRAW));
+
+   uint32_t indices[] = {0, 1, 2, 0, 2, 3};
+   auto vbo = engine::render::opengl::VBOBuilder().SetBufferSize(8 * sizeof(float)).SetData(vertices).Build();
+ //  vbo.Bind();
+
+   auto ebo = engine::render::opengl::EBOBuilder().SetBufferSize(6 * sizeof(uint32_t)).SetData(indices).Build();
+   //ebo.Bind();
+
+   auto vao = engine::render::opengl::VAOBuilder().SetEBOID(ebo.GetId())
+                                                  .SetVBOID(vbo.GetId())
+                                                  .AddAttribPointer({
+                                                   .location = 0,
+                                                   .size = 2,
+                                                   .type = GL_FLOAT,
+                                                   .normalized = GL_FALSE, 
+                                                   .stride = 2 * sizeof(float),
+                                                   .pointer = nullptr
+                                                   }).Build();
+                                                
+   vao.Bind();
+  // vao.Unbind();
+  // GL_CALL(glVertexAttribPointer(0, 2, GL_FLOAT, GL_TRUE, 2 *sizeof(float),nullptr));
    
 
    auto shaderBuilder = ShaderBuilder();
@@ -140,11 +104,10 @@ int main(){
        GL_CALL(glClearColor(0, 0, 0, 0));
        GL_CALL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
        //
-       GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, VBO));
-       GL_CALL(glEnableVertexAttribArray(0));
-       GL_CALL(glUseProgram(program));
-       GL_CALL(glDrawArrays(GL_TRIANGLES, 0, 3));
-    
+      // GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, VBO));
+      // GL_CALL(glEnableVertexAttribArray(0));
+     //  GL_CALL(glDrawArrays(GL_TRIANGLES, 0, 3));
+       glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
        //
        glfwPollEvents();
        glfwSwapBuffers(window);

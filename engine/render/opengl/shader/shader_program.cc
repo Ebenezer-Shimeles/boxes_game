@@ -44,6 +44,7 @@ engine::error::EngineVal<void> Shader::m_Dealloc() noexcept{
     }
     Unbind();
     glDeleteProgram(m_shader_id_);
+    m_shader_id_ = 0;
 
 }
 

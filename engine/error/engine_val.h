@@ -1,5 +1,7 @@
 #include "engine_error.h"
 #pragma once
+
+#include <memory>
 namespace engine{
     namespace error{
         template<typename T>
