@@ -10,6 +10,8 @@ add_executable(GRANNY  engine/libs/glad/src/glad.c
                        engine/render/opengl/texture/texture.cc
                        engine/render/opengl/camera/camera.cc
                        engine/render/opengl/shader/uniform.cc
+
+                       engine/core/core.cc
                        main.cc
                )
 

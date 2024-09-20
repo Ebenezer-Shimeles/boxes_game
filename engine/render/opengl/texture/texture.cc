@@ -88,7 +88,7 @@ engine::error::EngineVal<Texture> render::opengl::texture::TextureFromFile(const
     //     return file_tpl.err;
     // } 
     stbi_set_flip_vertically_on_load(flip);
-    
+
     int width, height, n_color;
     
     auto buffer = stbi_load(file_name, &width, &height, &n_color, 0);
