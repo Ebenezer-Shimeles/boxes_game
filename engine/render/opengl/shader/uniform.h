@@ -1,6 +1,6 @@
 #include <glad/glad.h>
 #include <shader/shader_program.h>
-
+#pragma once
 #include <glm/glm.hpp>
 #include <glm/matrix.hpp>
 namespace engine::render::opengl::shader{

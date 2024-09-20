@@ -1,21 +1,22 @@
 #include <vector/vector2.h>
-
+#pragma once
 #include <glm/vec3.hpp> // glm::vec3
 #include <glm/gtc/matrix_transform.hpp>
 namespace engine::render::opengl::camera{
    class Camera{
        private:
-           Camera();
-           static Camera m_instance;
-           glm::vec3 m_camera_pos = glm::vec3(0, 0, -3);
+           Camera() = delete;
+           
+           static glm::vec3 m_camera_pos;
 
            
        public:
-           void LookAt(const engine::vector::Vector2&  ) noexcept;
-           static const Camera&  GetInstance() noexcept;
-           const glm::vec3& GetCameraPos() noexcept;
+           static void LookAt(const engine::vector::Vector2&  ) noexcept;
+           
+           static const glm::vec3& GetCameraPos() noexcept;
 
-           glm::mat4x4 GetLookAtMatrix() noexcept;
+           static glm::highp_mat4 GetLookAtMatrix() noexcept;
    };
-
+ 
+   
 }

@@ -1,9 +1,17 @@
 #include <glad/glad.h>
 
 #include <iostream>
+#include <cstdio>
+#include <cstdlib>
+#include <chrono>
+#include <thread>
 #include <memory>
 #include <cstring>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/matrix.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <glm/vec3.hpp> // glm::vec3
 #include <glm/vec4.hpp> // glm::vec4
 #include <glm/mat4x4.hpp> // glm::mat4
@@ -17,6 +25,8 @@
 #include <buffer/element_buffer.h>
 #include <gl_call.h>
 #include <texture/texture.h>
+#include <shader/uniform.h>
+#include <camera/camera.h>
 
 int main(){
    if(!glfwInit()){
@@ -51,10 +61,10 @@ int main(){
   
    //
    float vertices[] = {
-     .5, -.5,    1.0, 0,
-     -.5, -.5,   0, 0,
-     -.5, .5,    0, 1.0,
-      .5, .5,    1.0, 1.0
+     1, -1,    1.0, 0,
+     -1, -1,   0, 0,
+     -1, 1,    0, 1.0,
+      1, 1,    1.0, 1.0
    };
    // uint32_t VAO;
    // GL_CALL(glGenVertexArrays(1, &VAO));
@@ -126,15 +136,33 @@ int main(){
    }
    auto shader = std::move(shader_tpl.val);
    shader.Bind();
-  
+   
+   
+   auto model_uniform = engine::render::opengl::shader::Uniform(shader.GetId(), "model");
+   auto view_uniform = engine::render::opengl::shader::Uniform(shader.GetId(), "view");
+   auto projection_uniform = engine::render::opengl::shader::Uniform(shader.GetId(), "projection");
+   glViewport(0, 0, 800, 800);
+   glm::mat4 model(1);
+   model = glm::translate(model, glm::vec3(0, 0, 25));
+   model =  glm::scale(model, glm::vec3(15, 15, 0));
+   model_uniform.SetMat4fv(glm::value_ptr(model));
+   
+   engine::render::opengl::camera::Camera::LookAt({0,0});
+   auto cm_val  = glm::lookAt(glm::vec3(0, 0, 0), glm::vec3(0, 0, 50), glm::vec3(0, 1,0)); //engine::render::opengl::camera::Camera::GetLookAtMatrix();
+   auto cm_val_raw = glm::value_ptr(cm_val);
+   view_uniform.SetMat4fv( cm_val_raw  );
+
+   
+   auto projection = glm::perspective(float(glm::radians(60.0)), (float)(800/800), 0.1f, 100.0f);
+   projection_uniform.SetMat4fv(glm::value_ptr(projection));
+   auto x = render::opengl::texture::TextureFromFile("b.jpg", true);
    while(!glfwWindowShouldClose(window)){
        GL_CALL(glClearColor(0, 0, 0, 0));
        GL_CALL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-       //
-      // GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, VBO));
-      // GL_CALL(glEnableVertexAttribArray(0));
-     //  GL_CALL(glDrawArrays(GL_TRIANGLES, 0, 3));
-       glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+       x.val.Bind();
+     
+      
+      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
        //
        glfwPollEvents();
        glfwSwapBuffers(window);

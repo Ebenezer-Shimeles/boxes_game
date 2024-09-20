@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 #include <error/engine_val.h>
-
+#pragma once
 class Shader;
 class ShaderBuilder{
 private:
@@ -49,6 +49,8 @@ public:
 
     engine::error::EngineVal<void> Bind() noexcept;
     engine::error::EngineVal<void> Unbind() noexcept;
+
+    GLuint GetId() const;
 
     friend  engine::error::EngineVal<Shader> ShaderBuilder::Build() noexcept;
 

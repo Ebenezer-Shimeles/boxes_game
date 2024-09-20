@@ -138,3 +138,6 @@ engine::error::EngineVal<Shader> ShaderBuilder::Build() noexcept{
  
     return {std::move(shader)};
 }
+GLuint Shader::GetId() const{
+    return m_shader_id_;
+}
