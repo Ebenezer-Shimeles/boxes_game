@@ -24,7 +24,7 @@
 #include <buffer/vertex_array_object.h>
 #include <buffer/element_buffer.h>
 #include <gl_call.h>
-#include <texture/texture.h>
+
 #include <shader/uniform.h>
 #include <camera/camera.h>
 

@@ -12,7 +12,7 @@
 #include <glm/ext/scalar_constants.hpp> // glm::pi
 
 
-#include <render/opengl/texture/texture.h>
+
 #include <core/core.h>
 #include <gl_call.h>
 #include <shader/uniform.h>
@@ -23,11 +23,13 @@
 
 
 #include <cstdio>
+#include <algorithm>
 
 using namespace engine::core;
 int16_t engine::core::_window_height=800;
 int16_t engine::core::_window_width=800;
 GLFWwindow *engine::core::_window;
+std::vector<engine::core::GameObject> engine::core::_objects;
 
 engine::error::EngineVal<void> engine::core::Init() noexcept{
     if(!glfwInit()){
@@ -166,4 +168,15 @@ engine::error::EngineVal<void> engine::core::Dealloc() noexcept{
     glfwDestroyWindow(engine::core::_window);
    glfwTerminate();
    return {};
+}
+
+void engine::core::Instanciate(const GameObject& obj) noexcept{
+   _objects.push_back(obj);
+}
+void engine::core::Delete(const GameObject& obj) noexcept{
+   //TODO need to remplement this with ID
+   auto index = std::find(_objects.begin(), _objects.end(), obj);
+   if(index != _objects.end()){
+      _objects.erase(index);
+   }
 }

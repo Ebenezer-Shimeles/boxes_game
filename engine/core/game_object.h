@@ -1,11 +1,33 @@
 #include <string>
 #include <vector>
-#pragma once
+
 #include <vector/vector2.h>
-#include <core/property.h>
+#include <render/opengl/texture/texture.h>
+using namespace render::opengl::texture;
 namespace engine::core
 {
+    
+    class GameObject;
+    class Property{
+        
+        
+        protected:
+            virtual void Update(const engine::core::GameObject&);
+            friend GameObject;
+    };
+
+    class RenderProperty : Property{
+        private:
+
+
+            Texture  x;
+            void Update(const engine::core::GameObject&) override;
+
+    };
     class GameObject{
+        public:
+            GameObject();
+             bool operator==(const GameObject&);
         private:
            std::string m_id;
            
@@ -15,9 +37,13 @@ namespace engine::core
 
            std::vector<Property> m_properties;
 
+          
+           static int32_t m_count;
+
         protected:
-            virtual void Update();
-            void AddProperty(const Property&);
+            virtual void Update() noexcept;
+            void AddProperty(const Property&) noexcept;
+
 
             
     };

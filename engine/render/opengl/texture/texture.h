@@ -1,11 +1,9 @@
+
 #include <glad/glad.h>
 
 #include <error/engine_val.h>
 
-#pragma once
-namespace render{
-    namespace opengl{
-        namespace texture{
+namespace render::opengl::texture{
             class Texture;
             class TextureBuilder{
 
@@ -42,6 +40,5 @@ namespace render{
 
 
             engine::error::EngineVal<Texture> TextureFromFile(const char*,  bool flip = false);
-        }
-    }
 }
+
