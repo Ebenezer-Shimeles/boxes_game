@@ -7,6 +7,7 @@ using namespace engine::core;
 GameObject::GameObject(){
     puts("Game object constructed\n");
     m_id = "#GO" + m_count;
+    m_id += '\0';
     m_count++;
 }
 

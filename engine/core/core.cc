@@ -133,6 +133,9 @@ engine::error::EngineVal<void> engine::core::MainLoop() noexcept{
    auto view_uniform = engine::render::opengl::shader::Uniform(shader.GetId(), "view");
    auto projection_uniform = engine::render::opengl::shader::Uniform(shader.GetId(), "projection");
    glViewport(0, 0, 800, 800);
+   glfwSetFramebufferSizeCallback(_window, [](GLFWwindow* window, int w, int h){
+         GL_CALL(glViewport(0, 0, w,h));
+   });
    glm::mat4 model(1);
    model = glm::translate(model, glm::vec3(0, 0, 25));
    model =  glm::scale(model, glm::vec3(15, 15, 0));
