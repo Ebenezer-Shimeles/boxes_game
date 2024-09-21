@@ -28,7 +28,18 @@
 #include <shader/uniform.h>
 #include <camera/camera.h>
 
+
+#include <game/dummy.h>
+
 #include <core/core.h>
+#include <core/game_object.h>
+
+using namespace engine::core;
+class Person :  public engine::core::GameObject{
+    void Update() noexcept override{
+        GameObject::Update(); //Base
+    }
+};
 
 int main(){
   
@@ -37,8 +48,12 @@ int main(){
       fprintf(stderr, "Error %s\n", engine_tpl.err.error_message);
       return-1;
    }
+
    auto x = render::opengl::texture::TextureFromFile("b.jpg", false);
    x.val.Bind();
+   auto c = Person();
+   engine::core::Instanciate(c);
+   //BeginGame();
    engine::core::MainLoop();
    engine::core::Dealloc();
 }

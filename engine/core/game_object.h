@@ -3,10 +3,13 @@
 
 #include <vector/vector2.h>
 #include <render/opengl/texture/texture.h>
+
+
+#pragma once
 using namespace render::opengl::texture;
 namespace engine::core
 {
-    
+    extern engine::error::EngineVal<void> MainLoop() noexcept;
     class GameObject;
     class Property{
         
@@ -44,7 +47,7 @@ namespace engine::core
             virtual void Update() noexcept;
             void AddProperty(const Property&) noexcept;
 
-
+            friend engine::error::EngineVal<void> engine::core::MainLoop() noexcept;
             
     };
 } 

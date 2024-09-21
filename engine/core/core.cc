@@ -153,7 +153,9 @@ engine::error::EngineVal<void> engine::core::MainLoop() noexcept{
        
        GL_CALL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
-     
+       for(auto& obj : _objects){
+          obj.Update();
+       }
       
       glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
        //
