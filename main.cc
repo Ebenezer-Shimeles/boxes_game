@@ -76,11 +76,13 @@ int main(){
    engine::input::RegisterKeyAction('S', [&c ](){
       //  c.AddDistance({1, 0});
       c.AddDistance({ -0.1, 0});
-      engine::sound::PlayTempSound("./assets/bullet.mp3");
+     // engine::sound::PlayTempSound("./assets/bullet.mp3");
 
       // auto pos = c.GetPosition();
       // printf("Position is at x=%i y=%i\n", pos.x, pos.y);
    });
+   auto g = GravityProperty();
+   c.AddProperty(g);
    Instanciate(&c);
    puts("HERE\n");
    // c.AddDistance({10, 10});

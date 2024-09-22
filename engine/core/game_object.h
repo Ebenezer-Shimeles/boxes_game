@@ -16,8 +16,16 @@ namespace engine::core
            Property();
         
         protected:
-            virtual void Update(const engine::core::GameObject&);
+            virtual void Update( engine::core::GameObject&);
             friend GameObject;
+    };
+    class GravityProperty: public Property{
+        public:
+           GravityProperty(float acc=0.01) : m_acc(acc){}
+        private:
+            float m_acc;
+            void Update(  engine::core::GameObject&) override;
+
     };
 
     class RenderProperty : public Property{
@@ -25,7 +33,7 @@ namespace engine::core
             RenderProperty(Texture&& text);
         private:
             Texture  m_texture = Texture();
-            void Update(const engine::core::GameObject&) override;
+            void Update( engine::core::GameObject&) override;
 
     };
     struct  Size{
@@ -36,11 +44,14 @@ namespace engine::core
             GameObject();
              bool operator==(const GameObject&);
              void AddProperty( Property&) noexcept;
+             
              void SetVelocity(const vector::Vector2) noexcept;
              void SetPosition(const vector::Vector2) noexcept;
              void SetAccleration(const vector::Vector2) noexcept;
              void SetSize(const Size&) noexcept;
-             void AddDistance(const vector::Vector2) noexcept;
+             void AddDistance( const vector::Vector2&) noexcept;
+             void AddAcclerate( const vector::Vector2&) noexcept;
+             void AddVelocity( const vector::Vector2&) noexcept;
 
              Size GetSize() const noexcept;
              vector::Vector2 GetAccleration() const noexcept;

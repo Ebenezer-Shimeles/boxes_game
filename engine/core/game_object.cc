@@ -19,12 +19,15 @@ GameObject::GameObject(){
     m_count++;
 }
 
-void engine::core::Property::Update(const engine::core::GameObject&){
+void engine::core::Property::Update( engine::core::GameObject&){
      //printf("Updating Property\n");
      
 } 
-
-
+void engine::core::GravityProperty::Update( engine::core::GameObject& obj) {
+    obj.AddVelocity({0.0, -0.00007});
+    //obj.GetAccleration();
+   
+}
 engine::vector::Vector2 engine::core::GameObject::GetPosition() const  noexcept{
     return m_pos;
 }
@@ -67,7 +70,18 @@ void engine::core::GameObject::AddProperty( Property& prop) noexcept{
    m_properties.push_back(&prop);
 }
 
-void GameObject::AddDistance(const vector::Vector2 val) noexcept{
+void engine::core::GameObject::AddAcclerate( const vector::Vector2& obj) noexcept{
+    m_accleration.x += obj.x;
+    m_accleration.y += obj.y;
+}
+
+void engine::core::GameObject::AddVelocity( const vector::Vector2& obj) noexcept{
+    m_velocity.x += obj.x;
+    m_velocity.y += obj.y;
+}
+
+
+void GameObject::AddDistance( const vector::Vector2& val) noexcept{
     m_pos.x += val.x;
     m_pos.y += val.y;
 }
@@ -92,7 +106,7 @@ engine::core::RenderProperty::RenderProperty( Texture&& t) : Property(){
 
 }
 
-void engine::core::RenderProperty::Update(const engine::core::GameObject& object){
+void engine::core::RenderProperty::Update( engine::core::GameObject& object){
     //printf("RenderPropety is drawing!\n");
     m_texture.Bind();
     GL_CALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
