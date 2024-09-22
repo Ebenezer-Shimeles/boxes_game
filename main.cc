@@ -81,14 +81,15 @@ int main(){
       // auto pos = c.GetPosition();
       // printf("Position is at x=%i y=%i\n", pos.x, pos.y);
    });
-   // auto g = GravityProperty();
-   // c.AddProperty(g);
+   auto g = GravityProperty();
+   c.AddProperty(g);
    
    Instanciate(&c);
    auto d = Person();
    d.AddProperty(render);
-   auto col = ColliderProperty([](GameObject* o, GameObject*d){
-       printf("COllision!\n");
+   int xu= 0;
+   auto col = ColliderProperty([&xu](GameObject* o, GameObject*d){
+       printf("COllision! %i\n", xu++);
    });
    d.AddProperty(col);
    Instanciate(&d);
