@@ -1,5 +1,6 @@
 #include <string>
 #include <vector>
+#include <functional>
 
 #include <vector/vector2.h>
 #include <render/opengl/texture/texture.h>
@@ -36,6 +37,13 @@ namespace engine::core
             void Update( engine::core::GameObject&) override;
 
     };
+    class ColliderProperty : public Property{
+        private:
+            void Update( engine::core::GameObject&) override;
+            std::function<void(GameObject *me, GameObject* other)> m_OnCollide;
+        public:
+            ColliderProperty(std::function<void(GameObject *me, GameObject* other)> func) :m_OnCollide(func){}
+    };
     struct  Size{
          float width,height;
     };
@@ -57,6 +65,8 @@ namespace engine::core
              vector::Vector2 GetAccleration() const noexcept;
              vector::Vector2 GetPosition() const noexcept;
              vector::Vector2 GetVelocity() const noexcept;
+
+             std::string GetId() const{return m_id;}
         private:
            std::string m_id;
            

@@ -21,14 +21,14 @@ void Texture::m_Dispose() noexcept{
 }
 
 void Texture::Bind() noexcept{
-    printf("Binding texture with id %i\n", m_id);
+   // printf("Binding texture with id %i\n", m_id);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, m_id);
 
 }
 
 void Texture::Unbind() noexcept{
-    printf("Uninding texture with id %i\n", m_id);
+    //printf("Uninding texture with id %i\n", m_id);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, 0);
     

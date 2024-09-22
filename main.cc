@@ -65,7 +65,7 @@ int main(){
    auto render = RenderProperty( std::move(x.val));
    c.AddProperty(render);
   // c.SetAccleration({0.000001, 0.000001});
-   c.SetSize({5, 5});
+  // c.SetSize({8, 8});
    engine::input::RegisterKeyAction('W', [&c ](){
       //  c.AddDistance({1, 0});
       c.AddDistance({0.1, 0});
@@ -76,14 +76,22 @@ int main(){
    engine::input::RegisterKeyAction('S', [&c ](){
       //  c.AddDistance({1, 0});
       c.AddDistance({ -0.1, 0});
-     // engine::sound::PlayTempSound("./assets/bullet.mp3");
+      engine::sound::PlayTempSound("./assets/bullet.mp3");
 
       // auto pos = c.GetPosition();
       // printf("Position is at x=%i y=%i\n", pos.x, pos.y);
    });
-   auto g = GravityProperty();
-  // c.AddProperty(g);
+   // auto g = GravityProperty();
+   // c.AddProperty(g);
+   
    Instanciate(&c);
+   auto d = Person();
+   d.AddProperty(render);
+   auto col = ColliderProperty([](GameObject* o, GameObject*d){
+       printf("COllision!\n");
+   });
+   d.AddProperty(col);
+   Instanciate(&d);
    puts("HERE\n");
    // c.AddDistance({10, 10});
    engine::core::SetWorldBackground("./assets/bkg.jpg");

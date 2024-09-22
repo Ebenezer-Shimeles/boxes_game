@@ -7,6 +7,9 @@
 
 using namespace engine::core;
 
+namespace engine::core{
+    extern std::vector<engine::core::GameObject*> _objects;
+}
 
 Property::Property(){
 
@@ -25,6 +28,7 @@ void engine::core::Property::Update( engine::core::GameObject&){
 } 
 void engine::core::GravityProperty::Update( engine::core::GameObject& obj) {
     obj.AddVelocity({0.0, -0.00007});
+    
     //obj.GetAccleration();
    
 }
@@ -55,16 +59,17 @@ void engine::core::GameObject::SetAccleration(const vector::Vector2 acc)noexcept
 }
 void engine::core::GameObject::Update() noexcept{
    // printf("Update called on GameObject Id %s\n", m_id.c_str());
+    for(auto& prop: m_properties){
+     //   printf("Update going to be called on prop\n");
+        prop->Update(*this);
+    }
     m_pos.x += m_accleration.x * (0.5) + m_velocity.x;
     m_pos.y += m_accleration.y * (0.5) + m_velocity.y;
 
     m_velocity.x += m_accleration.x;
     m_velocity.y += m_accleration.y;
 
-    for(auto& prop: m_properties){
-     //   printf("Update going to be called on prop\n");
-        prop->Update(*this);
-    }
+
 }
 void engine::core::GameObject::AddProperty( Property& prop) noexcept{
    m_properties.push_back(&prop);
@@ -78,6 +83,46 @@ void engine::core::GameObject::AddAcclerate( const vector::Vector2& obj) noexcep
 void engine::core::GameObject::AddVelocity( const vector::Vector2& obj) noexcept{
     m_velocity.x += obj.x;
     m_velocity.y += obj.y;
+}
+
+
+void ColliderProperty::Update( engine::core::GameObject& owner) {
+   for(auto obj : engine::core::_objects
+   ){
+      if(obj->GetId() != owner.GetId()){
+        //check for collisions here
+        auto owner_pos = owner.GetPosition();
+        auto owner_size = owner.GetSize();
+
+        // Calculate the owner's minimum and maximum vertical and horizontal extents
+        auto owner_min_vert = owner_pos.y;
+        auto owner_max_vert = owner_min_vert + owner_size.height;
+        auto owner_min_horiz = owner_pos.x;
+        auto owner_max_horiz = owner_min_horiz + owner_size.width;
+
+        // Get the other object's position and size
+        auto other_pos = obj->GetPosition();
+        auto other_size = obj->GetSize();
+
+        // Calculate the other object's minimum and maximum vertical and horizontal extents
+        auto other_min_vert = other_pos.y;
+        auto other_max_vert = other_min_vert + other_size.height;
+        auto other_min_horiz = other_pos.x;
+        auto other_max_horiz = other_min_horiz + other_size.width;
+
+        // Check for collision: if there's no gap on either axis, the objects are colliding
+        bool vertical_overlap = (owner_max_vert > other_min_vert) && (owner_min_vert < other_max_vert);
+        bool horizontal_overlap = (owner_max_horiz > other_min_horiz) && (owner_min_horiz < other_max_horiz);
+        if(
+             vertical_overlap && horizontal_overlap
+        ){
+            m_OnCollide(
+                &owner,
+                obj
+            );
+        }
+      }
+   }
 }
 
 
