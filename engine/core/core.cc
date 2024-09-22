@@ -12,7 +12,7 @@
 #include <glm/ext/scalar_constants.hpp> // glm::pi
 
 
-
+#include <kbd/kbd.h>
 #include <core/core.h>
 #include <gl_call.h>
 #include <shader/uniform.h>
@@ -29,7 +29,7 @@ using namespace engine::core;
 int16_t engine::core::_window_height=800;
 int16_t engine::core::_window_width=800;
 GLFWwindow *engine::core::_window;
-std::vector<engine::core::GameObject> engine::core::_objects;
+std::vector<engine::core::GameObject*> engine::core::_objects;
 
 engine::error::EngineVal<void> engine::core::Init() noexcept{
     if(!glfwInit()){
@@ -57,6 +57,7 @@ engine::error::EngineVal<void> engine::core::Init() noexcept{
       return {{__LINE__, "Error could not init GLAD!"}};
       
    }   
+   engine::input::Init();
    GL_CALL(glEnable(GL_DEPTH_TEST));
  
    return {};
@@ -67,7 +68,7 @@ engine::error::EngineVal<void> engine::core::Init() noexcept{
 engine::error::EngineVal<void> engine::core::MainLoop() noexcept{
       //
    float vertices[] = {
-     1, -1,    1.0, 0,
+      1, -1,    1.0, 0,
      -1, -1,   0, 0,
      -1, 1,    0, 1.0,
       1, 1,    1.0, 1.0
@@ -127,7 +128,7 @@ engine::error::EngineVal<void> engine::core::MainLoop() noexcept{
    auto shader = std::move(shader_tpl.val);
    shader.Bind();
 
-
+  
    
    auto model_uniform = engine::render::opengl::shader::Uniform(shader.GetId(), "model");
    auto view_uniform = engine::render::opengl::shader::Uniform(shader.GetId(), "view");
@@ -135,6 +136,9 @@ engine::error::EngineVal<void> engine::core::MainLoop() noexcept{
    glViewport(0, 0, 800, 800);
    glfwSetFramebufferSizeCallback(_window, [](GLFWwindow* window, int w, int h){
          GL_CALL(glViewport(0, 0, w,h));
+         _window_height = h;
+         _window_width = w;
+         
    });
    //glm::mat4 model(1);
    // model = glm::translate(model, glm::vec3(0, 0, 25));
@@ -142,12 +146,12 @@ engine::error::EngineVal<void> engine::core::MainLoop() noexcept{
    // model_uniform.SetMat4fv(glm::value_ptr(model));
    
 
-   auto cm_val  = glm::lookAt(glm::vec3(0, 0, 0), glm::vec3(0, 0, 50), glm::vec3(0, 1,0)); //engine::render::opengl::camera::Camera::GetLookAtMatrix();
+   auto cm_val  = glm::lookAt(glm::vec3(0, 0, 0), glm::vec3(0, 0, -50), glm::vec3(0, 1,0)); //engine::render::opengl::camera::Camera::GetLookAtMatrix();
    auto cm_val_raw = glm::value_ptr(cm_val);
    view_uniform.SetMat4fv( cm_val_raw  );
 
    
-   auto projection = glm::perspective(float(glm::radians(60.0)), (float)(800/800), 0.1f, 100.0f);
+   auto projection = glm::perspective(float(glm::radians(60.0)), ((float)_window_width/_window_height), 0.1f, 100.0f);
    projection_uniform.SetMat4fv(glm::value_ptr(projection));
     
 
@@ -155,14 +159,15 @@ engine::error::EngineVal<void> engine::core::MainLoop() noexcept{
     while(!glfwWindowShouldClose(engine::core::_window)){
        
        GL_CALL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-
+       engine::input::ProcessKeys();
        for(auto& obj : _objects){
+         obj->Update();
          glm::mat4 model(1);
-         model = glm::translate(model, glm::vec3(obj.m_pos.x, obj.m_pos.y, 25));
-         //model =  glm::scale(model, glm::vec3(15, 15, 0)); //Game background
+         model = glm::translate(model, glm::vec3(obj->m_pos.x, obj->m_pos.y, -25));
+         model =  glm::scale(model, glm::vec3(obj->m_size.width, obj->m_size.height, 0)); //Game background
          model_uniform.SetMat4fv(glm::value_ptr(model));
    
-          obj.Update();
+         
        }
       
       
@@ -180,13 +185,13 @@ engine::error::EngineVal<void> engine::core::Dealloc() noexcept{
    return {};
 }
 
-void engine::core::Instanciate(const GameObject& obj) noexcept{
+void engine::core::Instanciate(GameObject* obj) noexcept{
    _objects.push_back(obj);
 }
-void engine::core::Delete(const GameObject& obj) noexcept{
-   //TODO need to remplement this with ID
-   auto index = std::find(_objects.begin(), _objects.end(), obj);
-   if(index != _objects.end()){
-      _objects.erase(index);
-   }
-}
+// void engine::core::Delete(const GameObject& obj) noexcept{
+//    //TODO need to remplement this with ID
+//    auto index = std::find(_objects.begin(), _objects.end(), obj);
+//    if(index != _objects.end()){
+//       _objects.erase(index);
+//    }
+// }

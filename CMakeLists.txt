@@ -11,6 +11,7 @@ add_executable(GRANNY  engine/libs/glad/src/glad.c
                        engine/render/opengl/camera/camera.cc
                        engine/render/opengl/shader/uniform.cc
                        engine/core/game_object.cc
+                       engine/input/kbd/kbd.cc
 
                        engine/core/core.cc
                        main.cc
@@ -27,6 +28,7 @@ set_target_properties(ENGINE_GLFW_LIB PROPERTIES IMPORTED_LOCATION "./engine/lib
 target_link_libraries(GRANNY  ENGINE_GLFW_LIB gdi32 user32 )
 
 
+include_directories("./engine/input")
 include_directories("./engine/libs/glad/include")
 include_directories("./engine/libs")
 include_directories("engine")

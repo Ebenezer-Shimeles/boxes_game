@@ -28,6 +28,9 @@ namespace engine::core
             void Update(const engine::core::GameObject&) override;
 
     };
+    struct  Size{
+         float width,height;
+    };
     class GameObject{
         public:
             GameObject();
@@ -36,12 +39,20 @@ namespace engine::core
              void SetVelocity(const vector::Vector2) noexcept;
              void SetPosition(const vector::Vector2) noexcept;
              void SetAccleration(const vector::Vector2) noexcept;
+             void SetSize(const Size&) noexcept;
+             void AddDistance(const vector::Vector2) noexcept;
+
+             Size GetSize() const noexcept;
+             vector::Vector2 GetAccleration() const noexcept;
+             vector::Vector2 GetPosition() const noexcept;
+             vector::Vector2 GetVelocity() const noexcept;
         private:
            std::string m_id;
            
            vector::Vector2 m_pos = {0, 0};
            vector::Vector2 m_velocity ={0, 0};
            vector::Vector2 m_accleration ={0, 0};
+           Size m_size = {1,1};
 
            std::vector<Property*> m_properties;
 

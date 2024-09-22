@@ -1,8 +1,10 @@
 #include <core/game_object.h>
 #include <gl_call.h>
 
+
 #include <cstdio>
 #include <memory>
+
 using namespace engine::core;
 
 
@@ -18,9 +20,26 @@ GameObject::GameObject(){
 }
 
 void engine::core::Property::Update(const engine::core::GameObject&){
-     printf("Updating Property\n");
+     //printf("Updating Property\n");
      
 } 
+
+
+engine::vector::Vector2 engine::core::GameObject::GetPosition() const  noexcept{
+    return m_pos;
+}
+engine::vector::Vector2 engine::core::GameObject::GetAccleration() const noexcept{
+    return m_accleration;
+}
+engine::vector::Vector2 engine::core::GameObject::GetVelocity() const noexcept{
+    return m_velocity;
+}
+
+Size engine::core::GameObject::GetSize() const noexcept{
+    return m_size;
+}
+
+
 
 void engine::core::GameObject::SetVelocity(const vector::Vector2 velo)noexcept{
     m_velocity = velo;
@@ -32,7 +51,7 @@ void engine::core::GameObject::SetAccleration(const vector::Vector2 acc)noexcept
     m_accleration = acc;
 }
 void engine::core::GameObject::Update() noexcept{
-    printf("Update called on GameObject Id %s\n", m_id.c_str());
+   // printf("Update called on GameObject Id %s\n", m_id.c_str());
     m_pos.x += m_accleration.x * (0.5) + m_velocity.x;
     m_pos.y += m_accleration.y * (0.5) + m_velocity.y;
 
@@ -46,6 +65,14 @@ void engine::core::GameObject::Update() noexcept{
 }
 void engine::core::GameObject::AddProperty( Property& prop) noexcept{
    m_properties.push_back(&prop);
+}
+
+void GameObject::AddDistance(const vector::Vector2 val) noexcept{
+    m_pos.x += val.x;
+    m_pos.y += val.y;
+}
+void engine::core::GameObject::SetSize(const Size& sz) noexcept{
+    m_size = sz;
 }
 
 
@@ -66,7 +93,7 @@ engine::core::RenderProperty::RenderProperty( Texture&& t) : Property(){
 }
 
 void engine::core::RenderProperty::Update(const engine::core::GameObject& object){
-    printf("RenderPropety is drawing!\n");
+    //printf("RenderPropety is drawing!\n");
     m_texture.Bind();
     GL_CALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
    

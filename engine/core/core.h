@@ -13,10 +13,10 @@ namespace engine::core{
     engine::error::EngineVal<void> MainLoop() noexcept;
     engine::error::EngineVal<void> Dealloc() noexcept;
     
-    void Instanciate(const GameObject&) noexcept;
-    void Delete(const GameObject&) noexcept;
+    void Instanciate(GameObject*) noexcept;
+   // void Delete(const GameObject&) noexcept;
 
-    extern std::vector<engine::core::GameObject> _objects;
+    extern std::vector<engine::core::GameObject*> _objects;
 
     extern int16_t _window_height, _window_width;
     

@@ -24,6 +24,7 @@
 #include <buffer/vertex_array_object.h>
 #include <buffer/element_buffer.h>
 #include <gl_call.h>
+#include <kbd/kbd.h>
 
 #include <shader/uniform.h>
 #include <camera/camera.h>
@@ -49,7 +50,7 @@ int main(){
       return-1;
    }
 
-   auto x = render::opengl::texture::TextureFromFile("b.jpg", false);
+   auto x = render::opengl::texture::TextureFromFile("b.jpg", true);
   
    auto c = Person();
 
@@ -61,10 +62,26 @@ int main(){
    puts("here\n");
    auto render = RenderProperty( std::move(x.val));
    c.AddProperty(render);
-   c.SetAccleration({0.000001, 0.000001});
-   Instanciate(c);
+  // c.SetAccleration({0.000001, 0.000001});
+   c.SetSize({5, 5});
+   engine::input::RegisterKeyAction('W', [&c ](){
+      //  c.AddDistance({1, 0});
+      c.AddDistance({0.1, 0});
+
+      // auto pos = c.GetPosition();
+      // printf("Position is at x=%i y=%i\n", pos.x, pos.y);
+   });
+   engine::input::RegisterKeyAction('S', [&c ](){
+      //  c.AddDistance({1, 0});
+      c.AddDistance({ -0.1, 0});
+
+      // auto pos = c.GetPosition();
+      // printf("Position is at x=%i y=%i\n", pos.x, pos.y);
+   });
+   Instanciate(&c);
    puts("HERE\n");
-  
+   // c.AddDistance({10, 10});
+
    engine::core::MainLoop();
    engine::core::Dealloc();
 }
