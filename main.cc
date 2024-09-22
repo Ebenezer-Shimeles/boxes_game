@@ -50,10 +50,20 @@ int main(){
    }
 
    auto x = render::opengl::texture::TextureFromFile("b.jpg", false);
-   x.val.Bind();
+  
    auto c = Person();
-   engine::core::Instanciate(c);
-   //BeginGame();
+
+   if(x.IsError()){
+      puts(x.err.error_message);
+      return -1;
+
+   }
+   puts("here\n");
+   auto render = RenderProperty( std::move(x.val));
+   c.AddProperty(render);
+   Instanciate(c);
+   puts("HERE\n");
+  
    engine::core::MainLoop();
    engine::core::Dealloc();
 }

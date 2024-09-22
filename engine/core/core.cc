@@ -160,7 +160,7 @@ engine::error::EngineVal<void> engine::core::MainLoop() noexcept{
           obj.Update();
        }
       
-      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+      
        //
        glfwPollEvents();
        glfwSwapBuffers(engine::core::_window);

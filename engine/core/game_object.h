@@ -12,18 +12,19 @@ namespace engine::core
     extern engine::error::EngineVal<void> MainLoop() noexcept;
     class GameObject;
     class Property{
-        
+        public:
+           Property();
         
         protected:
             virtual void Update(const engine::core::GameObject&);
             friend GameObject;
     };
 
-    class RenderProperty : Property{
+    class RenderProperty : public Property{
+        public:
+            RenderProperty(Texture&& text);
         private:
-
-
-            Texture  x;
+            Texture  m_texture = Texture();
             void Update(const engine::core::GameObject&) override;
 
     };
@@ -31,6 +32,7 @@ namespace engine::core
         public:
             GameObject();
              bool operator==(const GameObject&);
+             void AddProperty( Property&) noexcept;
         private:
            std::string m_id;
            
@@ -38,14 +40,14 @@ namespace engine::core
            vector::Vector2 m_velocity;
            vector::Vector2 accleration;
 
-           std::vector<Property> m_properties;
+           std::vector<Property*> m_properties;
 
           
            static int32_t m_count;
 
         protected:
             virtual void Update() noexcept;
-            void AddProperty(const Property&) noexcept;
+            
 
             friend engine::error::EngineVal<void> engine::core::MainLoop() noexcept;
             

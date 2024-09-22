@@ -42,10 +42,14 @@ Texture::~Texture(){
 
 Texture::Texture(Texture&& other){
     printf("Moving texture with id %i\n", other.m_id);
+    printf("This is %i\n", (intptr_t)this);
     this->m_id = other.m_id;
+    printf("Hollowing other object\n");
     other.m_id = 0;
+    printf("Moved done\n");
 }
-Texture& Texture::operator=(Texture&& other){
+
+Texture&& Texture::operator=(Texture&& other){
     printf("Moving texture with id %i\n", other.m_id);
    this->m_id = other.m_id;
    other.m_id = 0;

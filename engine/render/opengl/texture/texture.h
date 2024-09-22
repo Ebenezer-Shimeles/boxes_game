@@ -3,8 +3,13 @@
 
 #include <error/engine_val.h>
 
+namespace engine::core{
+    class RenderProperty;
+}
+
 namespace render::opengl::texture{
             class Texture;
+            
             class TextureBuilder{
 
                 void * m_buffer;
@@ -30,11 +35,11 @@ namespace render::opengl::texture{
                     Texture& operator=(const Texture&) = delete;
 
                     Texture(Texture&&);
-                    Texture& operator=(Texture&&);
+                    Texture&& operator=(Texture&&);
                     friend TextureBuilder;
                     friend engine::error::EngineVal<Texture>;
                     const GLuint& GetId() const;
-                    
+                    friend engine::core::RenderProperty;
             
             };
 
