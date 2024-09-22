@@ -12,6 +12,8 @@ namespace engine::core{
     engine::error::EngineVal<void> Init() noexcept;
     engine::error::EngineVal<void> MainLoop() noexcept;
     engine::error::EngineVal<void> Dealloc() noexcept;
+
+    void SetWorldBackground( char*const) noexcept;
     
     void Instanciate(GameObject*) noexcept;
    // void Delete(const GameObject&) noexcept;
@@ -21,5 +23,9 @@ namespace engine::core{
     extern int16_t _window_height, _window_width;
     
     extern GLFWwindow* _window;
+    extern bool _is_background_set;
+  
+
+    extern char* __background;
 }
 #endif

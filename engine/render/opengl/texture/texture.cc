@@ -94,14 +94,16 @@ engine::error::EngineVal<Texture> render::opengl::texture::TextureFromFile(const
     stbi_set_flip_vertically_on_load(flip);
 
     int width, height, n_color;
-    
+    puts("STBI FETCHING!\n");
     auto buffer = stbi_load(file_name, &width, &height, &n_color, 0);
     if(!buffer){
         engine::error::EngineError err = {__LINE__, "Error could not load image!"};
+        printf("STBI COULD NOT LOAD IMAGE!\n");
         return {err};
     }
    
 
     auto texutre = TextureBuilder().SetBuffer(buffer).SetImageHeight(height).SetImageWidth(width).Build();
+    printf("Image is fetched!\n");
     return {std::move(texutre)};
 }

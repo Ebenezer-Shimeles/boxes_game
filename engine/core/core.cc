@@ -32,6 +32,13 @@ int16_t engine::core::_window_width=800;
 GLFWwindow *engine::core::_window;
 std::vector<engine::core::GameObject*> engine::core::_objects;
 
+bool engine::core::_is_background_set = false;
+char *engine::core::__background="";
+void engine::core::SetWorldBackground( char*const filename) noexcept{
+    _is_background_set = true;
+    __background = filename;
+}
+
 engine::error::EngineVal<void> engine::core::Init() noexcept{
     if(!glfwInit()){
       return{{__LINE__, "Error could not init glfw!\n"}};
@@ -158,19 +165,43 @@ engine::error::EngineVal<void> engine::core::MainLoop() noexcept{
    
    auto projection = glm::perspective(float(glm::radians(60.0)), ((float)_window_width/_window_height), 0.1f, 100.0f);
    projection_uniform.SetMat4fv(glm::value_ptr(projection));
-    
-
-    GL_CALL(glClearColor(0, 0, 0, 0));
-    while(!glfwWindowShouldClose(engine::core::_window)){
+   Texture txt;
+  
+   if(_is_background_set && __background){
+       printf("Fetching  background!\n");
+       auto background_tpl = TextureFromFile(__background, true);
+        if(background_tpl.IsError()){
+           printf("Error in setting bkg\n");
+           return {background_tpl.err};
+        }
+       txt.m_id = background_tpl.val.m_id;
+       background_tpl.val.m_id = 0;
+   }
+   printf("Going into mainloop\n");
+   GL_CALL(glClearColor(1, 1, 1, 0));
+   while(!glfwWindowShouldClose(engine::core::_window)){
+      GL_CALL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+      if(_is_background_set){
+         txt.Bind();
+          glm::mat4 model(1);
+        
+          model = glm::translate(model, glm::vec3(0, 0, -35));
+           model =  glm::scale(model, glm::vec3(20, 20, 0)); //Game background
+          model_uniform.SetMat4fv(glm::value_ptr(model));
+          GL_CALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
+          txt.Unbind();
+      }
        
-       GL_CALL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+       
        engine::input::ProcessKeys();
+
        for(auto& obj : _objects){
-         obj->Update();
+       
          glm::mat4 model(1);
          model = glm::translate(model, glm::vec3(obj->m_pos.x, obj->m_pos.y, -25));
          model =  glm::scale(model, glm::vec3(obj->m_size.width, obj->m_size.height, 0)); //Game background
          model_uniform.SetMat4fv(glm::value_ptr(model));
+         obj->Update();
    
          
        }

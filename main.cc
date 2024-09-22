@@ -82,11 +82,15 @@ int main(){
       // printf("Position is at x=%i y=%i\n", pos.x, pos.y);
    });
    auto g = GravityProperty();
-   c.AddProperty(g);
+  // c.AddProperty(g);
    Instanciate(&c);
    puts("HERE\n");
    // c.AddDistance({10, 10});
+   engine::core::SetWorldBackground("./assets/bkg.jpg");
 
-   engine::core::MainLoop();
+   auto main_loop_tpl = engine::core::MainLoop();
+   if(main_loop_tpl.IsError()){
+      printf("Error in main loop %s\n", main_loop_tpl.err.error_message);
+   }
    engine::core::Dealloc();
 }

@@ -5,6 +5,7 @@
 
 namespace engine::core{
     class RenderProperty;
+    extern engine::error::EngineVal<void> MainLoop() noexcept;
 }
 
 namespace render::opengl::texture{
@@ -40,6 +41,7 @@ namespace render::opengl::texture{
                     friend engine::error::EngineVal<Texture>;
                     const GLuint& GetId() const;
                     friend engine::core::RenderProperty;
+                    friend  engine::error::EngineVal<void> engine::core::MainLoop() noexcept;
             
             };
 
