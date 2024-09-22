@@ -33,7 +33,7 @@ namespace engine::core
             GameObject();
              bool operator==(const GameObject&);
              void AddProperty( Property&) noexcept;
-             void SetSpeed(const vector::Vector2) noexcept;
+             void SetVelocity(const vector::Vector2) noexcept;
              void SetPosition(const vector::Vector2) noexcept;
              void SetAccleration(const vector::Vector2) noexcept;
         private:

@@ -22,7 +22,7 @@ void engine::core::Property::Update(const engine::core::GameObject&){
      
 } 
 
-void engine::core::GameObject::SetSpeed(const vector::Vector2 velo)noexcept{
+void engine::core::GameObject::SetVelocity(const vector::Vector2 velo)noexcept{
     m_velocity = velo;
 }
 void engine::core::GameObject::SetPosition(const vector::Vector2 pos)noexcept{
@@ -35,6 +35,9 @@ void engine::core::GameObject::Update() noexcept{
     printf("Update called on GameObject Id %s\n", m_id.c_str());
     m_pos.x += m_accleration.x * (0.5) + m_velocity.x;
     m_pos.y += m_accleration.y * (0.5) + m_velocity.y;
+
+    m_velocity.x += m_accleration.x;
+    m_velocity.y += m_accleration.y;
 
     for(auto& prop: m_properties){
      //   printf("Update going to be called on prop\n");
