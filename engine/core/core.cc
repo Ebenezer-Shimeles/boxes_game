@@ -12,6 +12,7 @@
 #include <glm/ext/scalar_constants.hpp> // glm::pi
 
 
+#include <sound/sound.h>
 #include <kbd/kbd.h>
 #include <core/core.h>
 #include <gl_call.h>
@@ -57,6 +58,10 @@ engine::error::EngineVal<void> engine::core::Init() noexcept{
       return {{__LINE__, "Error could not init GLAD!"}};
       
    }   
+   auto sound_init_tpl = engine::sound::Init();
+   if(sound_init_tpl.IsError()){
+      return sound_init_tpl.err;
+   }
    engine::input::Init();
    GL_CALL(glEnable(GL_DEPTH_TEST));
  

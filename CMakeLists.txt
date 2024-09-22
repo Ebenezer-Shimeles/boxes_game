@@ -12,7 +12,7 @@ add_executable(GRANNY  engine/libs/glad/src/glad.c
                        engine/render/opengl/shader/uniform.cc
                        engine/core/game_object.cc
                        engine/input/kbd/kbd.cc
-
+                       engine/sound/sound.cc
                        engine/core/core.cc
                        main.cc
                )

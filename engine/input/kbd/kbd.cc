@@ -3,6 +3,7 @@
 
 #include <cstdio>
 
+
 std::unordered_map<uint8_t, int> engine::input::_bindings = {
    
 };
@@ -19,6 +20,8 @@ void engine::input::Init() noexcept{
     printf("Initalizing keyboard\n");
     engine::input::_bindings.emplace('W', GLFW_KEY_W);
     engine::input::_bindings.emplace('S', GLFW_KEY_S);
+    engine::input::_bindings.emplace('D', GLFW_KEY_D);
+    engine::input::_bindings.emplace('A', GLFW_KEY_A);
 }
 
 void engine::input::RegisterKeyAction(const uint8_t chr, std::function<void()> action) noexcept{

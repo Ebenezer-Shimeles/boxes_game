@@ -34,6 +34,7 @@
 
 #include <core/core.h>
 #include <core/game_object.h>
+#include <sound/sound.h>
 
 using namespace engine::core;
 class Person :  public engine::core::GameObject{
@@ -60,6 +61,7 @@ int main(){
 
    }
    puts("here\n");
+   
    auto render = RenderProperty( std::move(x.val));
    c.AddProperty(render);
   // c.SetAccleration({0.000001, 0.000001});
@@ -74,6 +76,7 @@ int main(){
    engine::input::RegisterKeyAction('S', [&c ](){
       //  c.AddDistance({1, 0});
       c.AddDistance({ -0.1, 0});
+      engine::sound::PlayTempSound("./assets/bullet.mp3");
 
       // auto pos = c.GetPosition();
       // printf("Position is at x=%i y=%i\n", pos.x, pos.y);
