@@ -61,6 +61,7 @@ int main(){
    puts("here\n");
    auto render = RenderProperty( std::move(x.val));
    c.AddProperty(render);
+   c.SetPosition({10, 10});
    Instanciate(c);
    puts("HERE\n");
   

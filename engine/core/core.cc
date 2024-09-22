@@ -136,10 +136,10 @@ engine::error::EngineVal<void> engine::core::MainLoop() noexcept{
    glfwSetFramebufferSizeCallback(_window, [](GLFWwindow* window, int w, int h){
          GL_CALL(glViewport(0, 0, w,h));
    });
-   glm::mat4 model(1);
-   model = glm::translate(model, glm::vec3(0, 0, 25));
-   model =  glm::scale(model, glm::vec3(15, 15, 0));
-   model_uniform.SetMat4fv(glm::value_ptr(model));
+   //glm::mat4 model(1);
+   // model = glm::translate(model, glm::vec3(0, 0, 25));
+   // //model =  glm::scale(model, glm::vec3(15, 15, 0)); //Game background
+   // model_uniform.SetMat4fv(glm::value_ptr(model));
    
 
    auto cm_val  = glm::lookAt(glm::vec3(0, 0, 0), glm::vec3(0, 0, 50), glm::vec3(0, 1,0)); //engine::render::opengl::camera::Camera::GetLookAtMatrix();
@@ -157,6 +157,11 @@ engine::error::EngineVal<void> engine::core::MainLoop() noexcept{
        GL_CALL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
        for(auto& obj : _objects){
+         glm::mat4 model(1);
+         model = glm::translate(model, glm::vec3(obj.m_pos.x, obj.m_pos.y, 25));
+         //model =  glm::scale(model, glm::vec3(15, 15, 0)); //Game background
+         model_uniform.SetMat4fv(glm::value_ptr(model));
+   
           obj.Update();
        }
       
