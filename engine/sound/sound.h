@@ -8,4 +8,5 @@ namespace engine::sound{
    void PlayTempSound(const char*) noexcept;
 
    extern ma_engine _engine;
+   extern bool _is_playing;
 } 

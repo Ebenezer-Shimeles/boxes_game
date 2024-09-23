@@ -28,11 +28,11 @@ void engine::core::Property::Update( engine::core::GameObject&){
 } 
 void engine::core::GravityProperty::Update( engine::core::GameObject& obj) {
     auto dist = obj.GetPosition();
-    if(dist.y <= -7){
+    if(dist.y <= -7 && !m_dont){
         return;
     }
-    printf("Pos now is %f\n", dist.y);
-    obj.AddDistance({0.0, -0.001});
+   // printf("Pos now is %f\n", dist.y);
+    obj.AddDistance({0.0, -0.005});
     
     //obj.GetAccleration();
    

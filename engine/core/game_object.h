@@ -22,9 +22,12 @@ namespace engine::core
     };
     class GravityProperty: public Property{
         public:
-           GravityProperty(float acc=0.01) : m_acc(acc){}
+           GravityProperty(bool dont = false, float acc=0.01) : m_acc(acc){
+             this->m_dont = dont;
+           }
         private:
             float m_acc;
+            bool m_dont = false;
             void Update(  engine::core::GameObject&) override;
 
     };
@@ -67,9 +70,11 @@ namespace engine::core
              vector::Vector2 GetVelocity() const noexcept;
 
              std::string GetId() const{return m_id;}
+             std::string GetType() const{ return m_type;}
+             void SetType( const std::string& t)  {m_type=t;}
         private:
            std::string m_id;
-           
+           std::string m_type;
            vector::Vector2 m_pos = {0, 0};
            vector::Vector2 m_velocity ={0, 0};
            vector::Vector2 m_accleration ={0, 0};
